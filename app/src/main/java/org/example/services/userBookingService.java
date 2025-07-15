@@ -2,6 +2,7 @@ package org.example.services;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.entities.User;
+import org.example.util.UserServiceUtil;
 
 
 import java.util.*;
@@ -21,9 +22,9 @@ public class userBookingService {
     }
 
     public Boolean loginUser(){
-        Optional<User> foundUser = UserList.stream().filter(user1 -> {
-            return user1.getName().equals(user.getName()) && UserServiceUtil.checkPasword(user.getPassword(), user1.getHashedPassword());
-        }).firstFind();
+        Optional<User> foundUser = userList.stream().filter(user1 -> {
+            return user1.getName().equals(user.getName()) && UserServiceUtil.checkPassword(user.getPassword(), user1.getHashedPassword());
+        }).findFirst();
         return foundUser.isPresent();
     }
 
@@ -39,6 +40,10 @@ public class userBookingService {
         }
     }
 
+    private void saveUserListToFile() throws IOException {
+        File usersFile = new File(USERS_PATH);
+        objectMapper.writeValue(usersFile, userList);
+    }
 
 
 
